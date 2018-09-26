@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.1" type="plugin" group="system" method="upgrade">
+	<name>Rich Snippets for jEvents</name>
+	<author>JoomDev</author>
+	<creationDate>March 2016</creationDate>
+	<copyright>All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>info@joomdev.com</authorEmail>
+	<authorUrl>www.joomdev.com</authorUrl>
+	<version>1.0</version>
+	<description>
+	<![CDATA[<div style="font-size:16px; font-weight:bold; color:black; text-align:left; margin:0px; padding:5px;">
+	Rich Snippets installed successfully.</div><div style="font-weight:normal; border-bottom:1px solid #f0dc7e;display:block; padding:5px; margin:5px; background-color:#fff;"></div>
+	<p>
+This plugin enables you to set all the important & precise information to display in the Google Search results and enhance your listings. It improves the visibility of your events to a great extent. Plugin uses standard Schema.org markup and works with all major search engines.</p>
+
+<h3>Features</h3>
+
+<ul><li>Add your Event name/Description in Google search results</li>
+<li>Detailed Parameters (event name, alternate name, URL, and more)</li>
+<li>Easy & Quick installation.</li>
+<li>Instant support</li></ul></p>
+	]]>
+
+	</description>
+	<files>
+		<filename plugin="Jeventsnippet">Jeventsnippet.php</filename>
+		<filename>Jeventsnippet.xml</filename>
+	</files>
+</extension>
