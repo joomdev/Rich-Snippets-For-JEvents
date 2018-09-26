@@ -2,7 +2,8 @@
 /**
  * @package		Rich Snippets for jEvents
  * @author		www.joomdev.com
- * @author		Created on March 2016
+ * @version		1.1
+ * @author		Created on July 2016
  * @copyright	Copyright (C) 2009 - 2016 www.joomdev.com. All rights reserved.
  * @license		GNU GPL2 or later; see LICENSE.txt
  */
@@ -23,6 +24,7 @@ class PlgSystemJeventsnippet extends JPlugin
 		
 		include_once(JPATH_BASE.'/components/com_jevents/libraries/datamodel.php');
 		include_once(JPATH_BASE.'/administrator/components/com_jevents/libraries/config.php');
+		
 		$doc = JFactory::getDocument();
 		$input = JFactory::getApplication()->input;
 		$extension = $input->get('option', '', 'cmd');
@@ -32,6 +34,7 @@ class PlgSystemJeventsnippet extends JPlugin
 		if(($doc->getType() == 'html') && $extension == 'com_jevents'){
 			$dataHeader_	=	array();
 			$jeventtask_  = $input->get('task');
+		
 			$dataObject_  = new JEventsDataModel;
 			
 			switch($jeventtask_){
@@ -84,6 +87,7 @@ class PlgSystemJeventsnippet extends JPlugin
 								$doc->addScriptDeclaration($content_,'application/ld+json');
 								$a_ ++;
 						}
+							$doc->addCustomTag('  <!-- Rich Snippets for jEvents plugin version 1.1 by www.joomdev.com --> ');	
 					}
 						
 				break;
@@ -107,9 +111,20 @@ class PlgSystemJeventsnippet extends JPlugin
 								$url_					 		= 	JURI::Root().JRoute::_($rowlink_);
 								$decs = strip_tags($v_->description);
 								$contact                        = $v_->contact;
-								
-								$location_						= 	(isset($v_->_location)) ? $v_->_location : '' ;	
-								
+								if($v_->_loc_title != NULL)
+								{
+							    $locations = $this->getlocation($v_->_loc_id,$jeventtask_);	
+								if($locations == 0)
+								{
+								$location_						= 	(isset($v_->_location)) ? $v_->_location : '' ;		
+								}
+								else {
+								$location_ = $locations[0]->street.' , '.$locations[0]->city.' , '.$locations[0]->state.' '.$locations[0]->postcode;	
+								}
+								}
+								else {
+								$location_						= 	(isset($v_->_location)) ? $v_->_location : '' ;		
+								}
 								$content_ = ' 
 								{
 									"@context": "http://schema.org",
@@ -133,6 +148,7 @@ class PlgSystemJeventsnippet extends JPlugin
 								$doc->addScriptDeclaration($content_,'application/ld+json');
 								$a_ ++;
 						}
+							$doc->addCustomTag('  <!-- Rich Snippets for jEvents plugin version 1.1 by www.joomdev.com --> ');	
 					}
 				break;
 				
@@ -158,8 +174,20 @@ class PlgSystemJeventsnippet extends JPlugin
 								$url_						= 	JURI::Root().JRoute::_($rowlink_);
 								$decs = strip_tags($v_->description);
 								$contact = $v_->contact;
-								$location_					= 	(isset($v_->_location)) ? $v_->_location : '' ;
-
+								if($v_->_loc_title != NULL)
+								{
+							    $locations = $this->getlocation($v_->_loc_id,$jeventtask_);	
+								if($locations == 0)
+								{
+								$location_						= 	(isset($v_->_location)) ? $v_->_location : '' ;		
+								}
+								else {
+								$location_ = $locations[0]->street.' , '.$locations[0]->city.' , '.$locations[0]->state.' '.$locations[0]->postcode;	
+								}
+								}
+								else {
+								$location_						= 	(isset($v_->_location)) ? $v_->_location : '' ;		
+								}
 								$content_ = ' 
 								{
 								  "@context": "http://schema.org",
@@ -183,6 +211,7 @@ class PlgSystemJeventsnippet extends JPlugin
 								$doc->addScriptDeclaration($content_,'application/ld+json');
 								$a_ ++;		
 						}
+						$doc->addCustomTag(' <!-- Rich Snippets for jEvents plugin version 1.1 by www.joomdev.com --> ');		
 					}
 					
 				break;
@@ -208,8 +237,24 @@ class PlgSystemJeventsnippet extends JPlugin
 									$rowlink_ 						= $v_->viewDetailLink($v_->yup(), $v_->mup(), $v_->dup(), false);
 									$name_							= 	(isset($v_->_title)) ? $v_->_title : '' ;
 									$startDate_						= 	$v_->startrepeat;
-									$url_							= 	JURI::Root().JRoute::_($rowlink_);									
-									$location_						= 	(isset($v_->_location)) ? $v_->_location : '' ;	
+									$url_							= 	JURI::Root().JRoute::_($rowlink_);
+									
+								
+									if($v_->_loc_title != NULL)
+									{
+									$locations = $this->getlocation($v_->_loc_id,$jeventtask_);	
+									if($locations == 0)
+									{
+									$location_						= 	(isset($v_->_location)) ? $v_->_location : '' ;		
+									}
+									else {
+									$location_ = $locations[0]->street.' , '.$locations[0]->city.' , '.$locations[0]->state.' '.$locations[0]->postcode;	
+									}
+									}
+									else {
+									$location_						= 	(isset($v_->_location)) ? $v_->_location : '' ;		
+									}									
+									
 									$decs = strip_tags($v_->description);
 									$contact = $v_->contact;
 									$contact = 
@@ -240,7 +285,7 @@ class PlgSystemJeventsnippet extends JPlugin
 							}
 							
 						}
-						
+					$doc->addCustomTag(' <!-- Rich Snippets for jEvents plugin version 1.1 by www.joomdev.com --> ');	
 					}
 					$dataHeader_	=	array_values($dataHeader_);
 				break;
@@ -254,8 +299,6 @@ class PlgSystemJeventsnippet extends JPlugin
 					$day_  			= $input->get('day');
 					$uid_  			= $uid = urldecode((JRequest::getVar( 'uid', "" )));
 					$jeventData_	= $dataObject_->getEventData($evid_,$jevtype_,$year_, $month_,$day_,$uid_);				
-					
-					
 					$date_			 = (isset($jeventData_['row']->start_date)) ? date('Y-m-d',strtotime($jeventData_['row']->start_date)) : '';
 					$time_ 			 = (isset($jeventData_['row']->start_time)) ? date('h:i',strtotime($jeventData_['row']->start_time)) : '';
 					
@@ -267,8 +310,21 @@ class PlgSystemJeventsnippet extends JPlugin
 						$url_						= 	JURI::Root().JRoute::_($rowlink_);
 						$decs = strip_tags($jeventData_['row']->description);
 						$contact = $jeventData_['row']->contact;
-						$location_ 					= 	(isset($jeventData_['row']->_location)) ? $jeventData_['row']->_location : '' ;
-						
+						if(is_numeric($jeventData_['row']->_location))
+						{
+							$locations = $this->getlocation($jeventData_['row']->_location,$jeventtask_);
+							if($locations == 0)
+							{
+							$location_ 		= 	(isset($jeventData_['row']->_location)) ? $jeventData_['row']->_location : '' ;		
+							}
+							else {
+							$location_ = $locations[0]->street.' , '.$locations[0]->city.' , '.$locations[0]->state.' '.$locations[0]->postcode;	
+							}
+							
+						}
+						else {
+						$location_ 					= 	(isset($jeventData_['row']->_location)) ? $jeventData_['row']->_location : '' ;	
+						}
 						$content_ = ' 
 						{
 						  "@context": "http://schema.org",
@@ -280,14 +336,12 @@ class PlgSystemJeventsnippet extends JPlugin
 						  "location" : {
 							"@type" : "Place",
 							"name" : "'.$contact.'",
-							"address" :{
-								"location" :"'.$location_.'"
-							}
+							"address" : "'.$location_.'"
 						  }
 						} 
 						';
 						$doc->addScriptDeclaration($content_,'application/ld+json');
-						
+						$doc->addCustomTag('  <!-- Rich Snippets for jEvents plugin version 1.1 by www.joomdev.com --> ');
 					}				
 				break;
 				
@@ -303,4 +357,26 @@ class PlgSystemJeventsnippet extends JPlugin
 		}
 	
 	}
+	// Rich Snippets for jEvents plugin version 1.0 by www.joomdev.com Start -->
+
+		public function getlocation($loc,$task)
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('*');
+			$query->from($db->quoteName('#__jev_locations'));
+			$query->where($db->quoteName('loc_id')." = ".$db->quote($loc));
+			$db->setQuery($query);
+			$db->execute();
+			$num_rows = $db->getNumRows();
+			if($num_rows > 0)
+			{
+			$row = $db->loadObjectList();		
+			}
+			else {
+				$row = 0;
+			}
+			return $row;
+	}
+	// Rich Snippets for jEvents plugin version 1.0 by www.joomdev.com End -->
 }
